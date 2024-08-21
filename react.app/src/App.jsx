@@ -1,79 +1,32 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import { Container, Typography } from '@mui/material';
-import {MaterialReactTable} from 'material-react-table';
+// App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import SignUp from './components/Signup';
+import UserDataTable from './components/UserDataTable';
+import Home from './components/Home';
+import MultiStepForm from './components/MultiStepForm';
+import CustomerDetailForm from './components/CustomerDetailForm';
+import ProductDetailForm from './components/ProductDetailForm';
+import PurChaseDetailForm from './components/PurchaseDetailForm';
+
 
 const App = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from the fake API
-    axios.get('https://jsonplaceholder.typicode.com/users')
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
-
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'name', // normal accessorKey
-        header: 'Name',
-        size: 150,
-      },
-      {
-        accessorKey: 'email',
-        header: 'Email',
-        size: 200,
-      },
-      {
-        accessorKey: 'phone',
-        header: 'Phone',
-        size: 150,
-      },
-      {
-        accessorKey: 'website',
-        header: 'Website',
-        size: 150,
-      },
-      {
-        accessorKey: 'company.name',
-        header: 'Company',
-        size: 200,
-      },
-    ],
-    [],
-  );
-
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        User Data Table
-      </Typography>
-      <MaterialReactTable
-        columns={columns}
-        data={data}
-        enableColumnOrdering
-        enableGrouping
-        enableColumnResizing
-        initialState={{
-          columnVisibility: {
-            company: false, // Initially hide the company column
-          },
-        }}
-        muiTablePaperProps={{
-          elevation: 3,
-          sx: {
-            p: 2,
-            borderRadius: 2,
-          },
-        }}
-      />
-    </Container>
-  );
+    <Router>
+    <Navbar />
+    <Routes>
+      <Route path="/multi-step-form" element={<MultiStepForm />} />
+      <Route path="/user-data-table" element={<UserDataTable />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/CustomerDetailForm" element={<CustomerDetailForm/>}/>
+      <Route path="/ProductDetailForm" element={<ProductDetailForm/>}/>
+      <Route path="/PurchaseDetailForm" element={<PurChaseDetailForm/>}/>
+    </Routes>
+  </Router>
+);
 };
 
 export default App;
