@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, Button, Pagination } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
-import ProductsDetail from './ProductsDetail'; // Import the ProductsDetail component
+import ProductsDetail from './ProductsDetail'; 
+
 
 const items = [
   {
@@ -118,6 +119,7 @@ const Home = () => {
 
       {/* Render the ProductsDetail component here */}
       <ProductsDetail />
+      
     </Container>
   );
 };

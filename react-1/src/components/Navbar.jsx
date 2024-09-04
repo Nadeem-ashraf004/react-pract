@@ -11,6 +11,7 @@ import ContactsIcon from '@mui/icons-material/Contacts';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link } from 'react-router-dom';
 import logo from '../components/logo.png';
+import Home from './Home';
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -92,7 +93,9 @@ const Navbar = () => {
                 </IconButton>
             </Toolbar>
         </AppBar>
+        
     );
+    <Home/>
 };
 
 export default Navbar;

@@ -1,4 +1,3 @@
-// src/pages/ProductsDetail.jsx
 import React from 'react';
 import { AppBar, Toolbar, Typography, Container, Grid, Card, CardMedia, CardContent, Button, Box } from '@mui/material';
 
@@ -21,21 +20,21 @@ const ProductsDetail = () => {
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: 'red', height: '120px', display: 'flex', justifyContent: 'center' }}>
-    <Toolbar sx={{ minHeight: '120px' }}>
-        <Typography 
-            variant="h6" 
-            sx={{ 
-                flexGrow: 1, 
-                textAlign: 'center', 
-                color: 'white', 
-                fontWeight: 'bold', 
-                fontSize: '20px' 
-            }}
-        >
-            All Product Detail
-        </Typography>
-    </Toolbar>
-</AppBar>
+                <Toolbar sx={{ minHeight: '120px' }}>
+                    <Typography 
+                        variant="h6" 
+                        sx={{ 
+                            flexGrow: 1, 
+                            textAlign: 'center', 
+                            color: 'white', 
+                            fontWeight: 'bold', 
+                            fontSize: '20px' 
+                        }}
+                    >
+                        All Product Detail
+                    </Typography>
+                </Toolbar>
+            </AppBar>
             <Container sx={{ mt: 4 }}>
                 <Grid container spacing={3}>
                     {products.map(product => (
@@ -48,6 +47,10 @@ const ProductsDetail = () => {
                                     display: 'flex', 
                                     flexDirection: 'column', 
                                     justifyContent: 'space-between',
+                                    '&:hover .button-container': {
+                                        bottom: '10px',  // Move buttons up on hover
+                                        opacity: 1,       // Fade in buttons on hover
+                                    },
                                     '&:hover': {
                                         transform: 'translateY(-10px)',
                                         transition: 'transform 0.3s ease-in-out'
@@ -60,42 +63,54 @@ const ProductsDetail = () => {
                                     alt={`Product ${product.id}`}
                                     sx={{ height: '200px', objectFit: 'cover' }}
                                 />
-                                <CardContent>
+                                <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                                         {product.description}
                                     </Typography>
                                     <Typography variant="body2" sx={{ color: 'gray', mb: 2 }}>
                                         {product.price}
                                     </Typography>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Button 
-                                            variant="contained" 
-                                            sx={{ 
-                                                backgroundColor: 'red', 
-                                                color: 'white',
-                                                '&:hover': { 
-                                                    backgroundColor: 'black', 
-                                                    color: 'white' 
-                                                }
-                                            }}
-                                        >
-                                            Buy Now
-                                        </Button>
-                                        <Button 
-                                            variant="contained" 
-                                            sx={{ 
-                                                backgroundColor: 'red', 
-                                                color: 'white',
-                                                '&:hover': { 
-                                                    backgroundColor: 'black', 
-                                                    color: 'white'
-                                                }
-                                            }}
-                                        >
-                                            Add to Cart
-                                        </Button>
-                                    </Box>
                                 </CardContent>
+                                <Box 
+                                    sx={{ 
+                                        position: 'absolute', 
+                                        bottom: '-40px',  // Initially hidden below the card
+                                        left: 0, 
+                                        width: '100%', 
+                                        display: 'flex', 
+                                        justifyContent: 'space-between', 
+                                        opacity: 0,
+                                        transition: 'bottom 0.3s ease-in-out, opacity 0.3s ease-in-out', 
+                                    }}
+                                    className="button-container"
+                                >
+                                    <Button 
+                                        variant="contained" 
+                                        sx={{ 
+                                            backgroundColor: 'black', 
+                                            color: 'white',
+                                            '&:hover': { 
+                                                backgroundColor: 'white', 
+                                                color: 'black' 
+                                            }
+                                        }}
+                                    >
+                                        Buy Now
+                                    </Button>
+                                    <Button 
+                                        variant="contained" 
+                                        sx={{ 
+                                            backgroundColor: 'red', 
+                                            color: 'white',
+                                            '&:hover': { 
+                                                backgroundColor: 'white', 
+                                                color: 'red'
+                                            }
+                                        }}
+                                    >
+                                        Add to Cart
+                                    </Button>
+                                </Box>
                             </Card>
                         </Grid>
                     ))}
@@ -107,8 +122,8 @@ const ProductsDetail = () => {
                             backgroundColor: 'red', 
                             color: 'white',
                             '&:hover': { 
-                                backgroundColor: 'black', 
-                                color: 'white'
+                                backgroundColor: 'white', 
+                                color: 'red'
                             }
                         }}
                     >
