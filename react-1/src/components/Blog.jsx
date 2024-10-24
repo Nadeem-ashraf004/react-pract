@@ -2,7 +2,7 @@
 import React from 'react';
 import { Container, Box, Typography, Card, CardContent, AppBar, Toolbar } from '@mui/material';
 
-const About = () => {
+const Blog = () => {
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: '#F7444E', height: '120px', display: 'flex', justifyContent: 'center' }}>
@@ -17,7 +17,7 @@ const About = () => {
                             fontSize: '20px' 
                         }}
                     >
-                        ABOUT US
+                        OUR BLOG
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -69,4 +69,4 @@ const About = () => {
     );
 };
 
-export default About;
+export default Blog;

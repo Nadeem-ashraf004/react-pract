@@ -95,7 +95,7 @@ const Home = () => {
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: 'red',
+                  backgroundColor: '#F7444E',
                   '&:hover': { transform: 'scale(1.03)', backgroundColor: 'white', color: 'red' },
                   transform: `translateX(${activeIndex === index ? '0%' : '100%'})`,
                   transition: 'transform 1s ease-in-out',
