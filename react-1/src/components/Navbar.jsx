@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Button, Box, Menu, MenuItem, Avatar } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -11,12 +10,13 @@ import ContactsIcon from '@mui/icons-material/Contacts';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../components/logo.png';
-
+import { useModal } from './ModalContext'; // Import useModal from ModalContext
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileEl, setProfileEl] = useState(null);
   const navigate = useNavigate();
+  const { openLoginModal, openSignUpModal } = useModal(); // Destructure openSignUpModal from the modal context
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,12 +35,12 @@ const Navbar = () => {
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
+    openLoginModal(); // Open the login modal instead of navigating
     handleProfileClose();
   };
 
   const handleSignUpClick = () => {
-    navigate('/signup');
+    openSignUpModal(); // Open the sign up modal
     handleProfileClose();
   };
 
@@ -51,63 +51,34 @@ const Navbar = () => {
           <img src={logo} alt="Store Logo" style={{ height: '50px', marginRight: 'auto' }} />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <Button 
-            sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} 
-            component={Link} 
-            to="/home" 
-            startIcon={<HomeIcon />}
-          >
+          <Button sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} component={Link} to="/home" startIcon={<HomeIcon />}>
             Home
           </Button>
-          <Button 
-            sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }}
-            onClick={handleMenuClick}
-            endIcon={<ExpandMoreIcon />}
-          >
+          <Button sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} onClick={handleMenuClick} endIcon={<ExpandMoreIcon />}>
             Pages
           </Button>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-            <MenuItem 
-              sx={{ fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} 
-              component={Link} 
-              to="/about" 
-              onClick={handleMenuClose}
-            >
+            <MenuItem sx={{ fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} component={Link} to="/about" onClick={handleMenuClose}>
               About
             </MenuItem>
           </Menu>
-          <Button 
-            sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} 
-            component={Link} 
-            to="/products" 
-            startIcon={<CategoryIcon />}
-          >
+          <Button sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} component={Link} to="/products" startIcon={<CategoryIcon />}>
             Products
           </Button>
-          <Button 
-            sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} 
-            component={Link} 
-            to="/blogs" 
-            startIcon={<LibraryBooksIcon />}
-          >
+          <Button sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} component={Link} to="/blogs" startIcon={<LibraryBooksIcon />}>
             Blog
           </Button>
-          <Button 
-            sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} 
-            component={Link} 
-            to="/contacts" 
-            startIcon={<ContactsIcon />}
-          >
+          <Button sx={{ color: 'black', fontWeight: 'bold', '&:hover': { color: '#F7444E' } }} component={Link} to="/contacts" startIcon={<ContactsIcon />}>
             Contacts
           </Button>
 
           {/* Profile Section */}
           <IconButton onClick={handleProfileClick}>
             <Avatar />
-          </IconButton >
+          </IconButton>
           <Menu anchorEl={profileEl} open={Boolean(profileEl)} onClose={handleProfileClose}>
             <MenuItem onClick={handleLoginClick}>Login</MenuItem>
-            <MenuItem onClick={handleSignUpClick}>Sign Up</MenuItem>
+            <MenuItem onClick={handleSignUpClick}>Sign Up</MenuItem> {/* Now opens sign-up modal */}
           </Menu>
         </Box>
         <IconButton edge="end" sx={{ color: 'black', '&:hover': { color: '#F7444E' } }}>

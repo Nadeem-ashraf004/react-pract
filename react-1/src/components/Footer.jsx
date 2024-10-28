@@ -18,7 +18,7 @@ const Footer = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: '#f8f8f8', p: 4 }}>
+    <Box sx={{ bgcolor: '#FFFFFF', p: 4 }}>
       <Grid container spacing={4}>
         {/* Left Section with Logo and Contact Information */}
         <Grid item xs={12} md={3}>
@@ -29,7 +29,7 @@ const Footer = () => {
             ADDRESS:
           </Typography>
           <Typography variant="body2">
-            28 White tower, Street Name New York City, USA
+            Skardu, Street Name Jam-e-masjid road, Pakistan
           </Typography>
           <Typography variant="body1" fontWeight="bold" sx={{ mt: 2 }}>
             TELEPHONE:

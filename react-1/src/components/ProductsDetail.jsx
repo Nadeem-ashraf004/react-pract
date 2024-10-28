@@ -1,5 +1,7 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Container, Grid, Card, CardMedia, CardContent, Button, Box } from '@mui/material';
+import React, { useContext } from 'react';
+import { AppBar, Toolbar, Typography, Container, Grid, Card, CardMedia, CardContent } from '@mui/material';
+import { AuthContext } from '../components/AuthContext'; // Corrected import for AuthContext
+import { useNavigate } from 'react-router-dom';
 
 const products = [
     { id: 1, image: '/p1.png', description: 'Product 1 description', price: '$10', gender: 'male' },
@@ -17,8 +19,13 @@ const products = [
 ];
 
 const ProductsDetail = () => {
+    const navigate = useNavigate();
     const maleProducts = products.filter(product => product.gender === 'male');
     const femaleProducts = products.filter(product => product.gender === 'female');
+
+    const handleCardClick = (product) => {
+        navigate(`/product/${product.id}`, { state: { product } }); // Fixed template string to use backticks
+    };
 
     return (
         <>
@@ -40,7 +47,7 @@ const ProductsDetail = () => {
             </AppBar>
             <Container sx={{ mt: 4 }}>
                 <Grid container spacing={4}>
-                    {/* Male Products Section (Left side) */}
+                    {/* Male Products Section */}
                     <Grid item xs={12} md={6}>
                         <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: 'black', textAlign: 'center' }}>
                             Male Section
@@ -55,20 +62,17 @@ const ProductsDetail = () => {
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'space-between',
-                                            '&:hover .button-container': {
-                                                bottom: '10px',
-                                                opacity: 1,
-                                            },
                                             '&:hover': {
                                                 transform: 'translateY(-10px)',
                                                 transition: 'transform 0.3s ease-in-out'
                                             }
                                         }}
+                                        onClick={() => handleCardClick(product.id)}
                                     >
                                         <CardMedia
                                             component="img"
                                             image={product.image}
-                                            alt={`Product ${product.id}`}
+                                            alt={`Product ${product.id}`} // Fixed alt prop to be a valid string
                                             sx={{ height: '200px', objectFit: 'cover' }}
                                         />
                                         <CardContent sx={{ flexGrow: 1 }}>
@@ -79,53 +83,13 @@ const ProductsDetail = () => {
                                                 {product.price}
                                             </Typography>
                                         </CardContent>
-                                        <Box
-                                            sx={{
-                                                position: 'absolute',
-                                                bottom: '-40px',
-                                                left: 0,
-                                                width: '100%',
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                opacity: 0,
-                                                transition: 'bottom 0.3s ease-in-out, opacity 0.3s ease-in-out',
-                                            }}
-                                            className="button-container"
-                                        >
-                                            <Button
-                                                variant="contained"
-                                                sx={{
-                                                    backgroundColor: 'black',
-                                                    color: 'white',
-                                                    '&:hover': {
-                                                        backgroundColor: 'white',
-                                                        color: 'black'
-                                                    }
-                                                }}
-                                            >
-                                                Buy Now
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                sx={{
-                                                    backgroundColor: '#F7444E',
-                                                    color: 'white',
-                                                    '&:hover': {
-                                                        backgroundColor: 'white',
-                                                        color: '#F7444E'
-                                                    }
-                                                }}
-                                            >
-                                                Add to Cart
-                                            </Button>
-                                        </Box>
                                     </Card>
                                 </Grid>
                             ))}
                         </Grid>
                     </Grid>
 
-                    {/* Female Products Section (Right side) */}
+                    {/* Female Products Section */}
                     <Grid item xs={12} md={6}>
                         <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold', color: 'black', textAlign: 'center' }}>
                             Female Section
@@ -140,20 +104,17 @@ const ProductsDetail = () => {
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'space-between',
-                                            '&:hover .button-container': {
-                                                bottom: '10px',
-                                                opacity: 1,
-                                            },
                                             '&:hover': {
                                                 transform: 'translateY(-10px)',
                                                 transition: 'transform 0.3s ease-in-out'
                                             }
                                         }}
+                                        onClick={() => handleCardClick(product.id)}
                                     >
                                         <CardMedia
                                             component="img"
                                             image={product.image}
-                                            alt={`Product ${product.id}`}
+                                            alt={`Product ${product.id}`} // Fixed alt prop to be a valid string
                                             sx={{ height: '200px', objectFit: 'cover' }}
                                         />
                                         <CardContent sx={{ flexGrow: 1 }}>
@@ -164,69 +125,12 @@ const ProductsDetail = () => {
                                                 {product.price}
                                             </Typography>
                                         </CardContent>
-                                        <Box
-                                            sx={{
-                                                position: 'absolute',
-                                                bottom: '-40px',
-                                                left: 0,
-                                                width: '100%',
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                opacity: 0,
-                                                transition: 'bottom 0.3s ease-in-out, opacity 0.3s ease-in-out',
-                                            }}
-                                            className="button-container"
-                                        >
-                                            <Button
-                                                variant="contained"
-                                                sx={{
-                                                    backgroundColor: 'black',
-                                                    color: 'white',
-                                                    '&:hover': {
-                                                        backgroundColor: 'white',
-                                                        color: 'black'
-                                                    }
-                                                }}
-                                            >
-                                                Buy Now
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                sx={{
-                                                    backgroundColor: '#F7444E',
-                                                    color: 'white',
-                                                    '&:hover': {
-                                                        backgroundColor: 'white',
-                                                        color: '#F7444E'
-                                                    }
-                                                }}
-                                            >
-                                                Add to Cart
-                                            </Button>
-                                        </Box>
                                     </Card>
                                 </Grid>
                             ))}
                         </Grid>
                     </Grid>
                 </Grid>
-
-                {/* View More Button */}
-                <Box sx={{ textAlign: 'center', mt: 5}}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: '#F7444E',
-                            color: 'white',
-                            '&:hover': {
-                                backgroundColor: 'white',
-                                color: '#F7444E'
-                            }
-                        }}
-                    >
-                        View More
-                    </Button>
-                </Box>
             </Container>
         </>
     );
