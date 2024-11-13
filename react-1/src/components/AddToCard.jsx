@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Box, Typography, Button } from '@mui/material';
-import { useCart } from '../components/CartContext';
+import { useCart } from './components/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {

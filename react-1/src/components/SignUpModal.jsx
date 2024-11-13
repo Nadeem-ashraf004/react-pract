@@ -2,8 +2,10 @@
 import React from 'react';
 import { Modal, Box, Typography, Button, TextField } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup'; // Import Yup for validation
-import { useModal } from './ModalContext'; // Import the modal context
+import * as Yup from 'yup';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useModal } from './ModalContext';
 
 const style = {
   position: 'absolute',
@@ -18,18 +20,43 @@ const style = {
 };
 
 const SignUpModal = () => {
-  const { isSignUpOpen, closeSignUpModal } = useModal(); // Destructure modal state from context
+  const { isSignUpOpen, closeSignUpModal } = useModal();
+  const navigate = useNavigate(); // Initialize navigate function
 
-  // Define validation schema using Yup
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('First Name is required'),
     lastName: Yup.string().required('Last Name is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
-    password: Yup.string().required('Password is required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
+    password: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
   });
+
+  const handleSignUpSubmit = async (values, actions) => {
+    const { firstName, lastName, email, password } = values; // Get form values
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/user/register', {
+        firstName,
+        lastName,
+        email,
+        password
+      });
+      console.log('Signup successful:', response.data);
+      alert('Signup successful!');
+      closeSignUpModal();
+      navigate('/LoginModal'); 
+    } catch (error) {
+      console.error('Signup error:', error);
+      console.error('Detailed error response:', error.response?.data);
+      alert(error.response?.data?.message || 'An error occurred during signup.');
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
 
   return (
     <Modal
@@ -44,13 +71,10 @@ const SignUpModal = () => {
         </Typography>
         <Formik
           initialValues={{ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }}
-          validationSchema={validationSchema} // Apply validation schema
-          onSubmit={(values) => {
-            console.log('Sign Up data:', values);
-            closeSignUpModal(); // Close modal after submission (optional)
-          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSignUpSubmit}
         >
-          {({ errors, touched }) => ( // Handle errors and touched states
+          {({ errors, touched, isSubmitting }) => (
             <Form>
               <Box sx={{ mb: 2 }}>
                 <Field
@@ -110,8 +134,14 @@ const SignUpModal = () => {
                   helperText={errors.confirmPassword && touched.confirmPassword ? errors.confirmPassword : ''}
                 />
               </Box>
-              <Button type="submit" variant="contained" sx={{ backgroundColor: '#F7444E', color: 'white', '&:hover': { backgroundColor: 'white', color: 'red' } }}>
-                Sign Up
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={isSubmitting}
+                sx={{ backgroundColor: '#F7444E', color: 'white', '&:hover': { backgroundColor: 'white', color: 'red' } }}
+              >
+                {isSubmitting ? 'Signing Up...' : 'Sign Up'}
               </Button>
             </Form>
           )}

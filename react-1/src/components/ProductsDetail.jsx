@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { AppBar, Toolbar, Typography, Container, Grid, Card, CardMedia, CardContent } from '@mui/material';
-import { AuthContext } from '../components/AuthContext'; // Corrected import for AuthContext
+// import { AuthContext } from '../components/AuthContext'; // Corrected import for AuthContext
 import { useNavigate } from 'react-router-dom';
+import { AuthContext, useAuth } from './AuthContext';
+
 
 const products = [
     { id: 1, image: '/p1.png', description: 'Product 1 description', price: '$10', gender: 'male' },

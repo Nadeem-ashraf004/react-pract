@@ -1,16 +1,20 @@
-// LoginComponent.js
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Tab, Tabs, TextField, Button, IconButton, InputAdornment, Modal } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
 import { useModal } from './ModalContext';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 const LoginComponent = () => {
-    const { isLoginOpen, closeLoginModal, openSignUpModal } = useModal(); // Added openSignUpModal
+    const { isLoginOpen, closeLoginModal, openSignUpModal } = useModal();
     const [tab, setTab] = React.useState(0);
     const [showPassword, setShowPassword] = React.useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleTabChange = (event, newValue) => {
         setTab(newValue);
@@ -21,9 +25,56 @@ const LoginComponent = () => {
     };
 
     const handleSignUpClick = () => {
-        closeLoginModal(); // Close the login modal
-        openSignUpModal(); // Open the sign-up modal
+        closeLoginModal();
+        openSignUpModal();
     };
+
+    // Define form validation schema using Yup
+    const validationSchema = Yup.object({
+        emailOrPhone: Yup.string()
+            .required('Please enter your phone number or email')
+            .test(
+                'phoneOrEmail',
+                'Please enter a valid phone number or email',
+                value => /(^\d{10}$)|(^\S+@\S+\.\S+$)/.test(value)
+            ),
+        password: Yup.string()
+            .min(6, 'Password must be at least 6 characters long')
+            .required('Please enter your password'),
+    });
+
+    // Initialize Formik
+    const formik = useFormik({
+        initialValues: {
+            emailOrPhone: '',
+            password: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async values => {
+            setErrorMessage(''); // Clear previous error message
+            try {
+                const response = await axios.post('http://localhost:8000/api/user/login', values);
+
+                if (response.data.success) {
+                    console.log('Login successful:', response.data);
+                    
+                    // Close modal and navigate to the home page
+                    closeLoginModal();
+                    navigate('/home'); // Redirect to home page after successful login
+                } else {
+                    setErrorMessage(response.data.message || 'Login failed');
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    // User does not have an account
+                    setErrorMessage('Please sign up first.');
+                } else {
+                    // Other error
+                    setErrorMessage(error.response?.data?.message || 'Login error. Please try again.');
+                }
+            }
+        },
+    });
 
     return (
         <Modal open={isLoginOpen} onClose={closeLoginModal} aria-labelledby="login-modal">
@@ -51,18 +102,30 @@ const LoginComponent = () => {
                     <Tab label="Password" />
                     <Tab label="Phone Number" />
                 </Tabs>
-                <Box mt={2}>
+                <Box mt={2} component="form" onSubmit={formik.handleSubmit}>
                     <TextField
                         fullWidth
                         label="Please enter your Phone Number or Email"
                         variant="outlined"
                         sx={{ mb: 2 }}
+                        name="emailOrPhone"
+                        value={formik.values.emailOrPhone}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.emailOrPhone && Boolean(formik.errors.emailOrPhone)}
+                        helperText={formik.touched.emailOrPhone && formik.errors.emailOrPhone}
                     />
                     <TextField
                         fullWidth
                         label="Please enter your password"
                         variant="outlined"
                         type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -73,13 +136,13 @@ const LoginComponent = () => {
                             )
                         }}
                     />
-                    <Typography
-                        variant="body2"
-                        sx={{ mt: 1, textAlign: 'right', cursor: 'pointer', color: 'primary.main' }}
-                    >
-                        Forgot password?
-                    </Typography>
+                    {errorMessage && (
+                        <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                            {errorMessage}
+                        </Typography>
+                    )}
                     <Button
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="warning"
@@ -92,7 +155,7 @@ const LoginComponent = () => {
                         <Typography
                             component="span"
                             sx={{ color: 'primary.main', cursor: 'pointer', fontWeight: 'bold' }}
-                            onClick={handleSignUpClick} // Now opens sign-up modal
+                            onClick={handleSignUpClick}
                         >
                             Sign up
                         </Typography>

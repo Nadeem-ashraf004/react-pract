@@ -11,12 +11,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../components/logo.png';
 import { useModal } from './ModalContext'; // Import useModal from ModalContext
+import { useAuth } from './AuthContext'; // Import useAuth from AuthContext
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileEl, setProfileEl] = useState(null);
   const navigate = useNavigate();
-  const { openLoginModal, openSignUpModal } = useModal(); // Destructure openSignUpModal from the modal context
+  const { openLoginModal, openSignUpModal } = useModal();
+  const { user, login, logout } = useAuth();
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,12 +37,22 @@ const Navbar = () => {
   };
 
   const handleLoginClick = () => {
-    openLoginModal(); // Open the login modal instead of navigating
+    openLoginModal();
     handleProfileClose();
   };
 
   const handleSignUpClick = () => {
-    openSignUpModal(); // Open the sign up modal
+    openSignUpModal();
+    handleProfileClose();
+  };
+
+  const handleLogout = () => {
+    logout(); // Clear the user state
+    handleProfileClose();
+  };
+
+  const handleNavigateToDashboard = () => {
+    navigate('/user-dashboard'); // Navigate to the user dashboard
     handleProfileClose();
   };
 
@@ -77,8 +89,17 @@ const Navbar = () => {
             <Avatar />
           </IconButton>
           <Menu anchorEl={profileEl} open={Boolean(profileEl)} onClose={handleProfileClose}>
-            <MenuItem onClick={handleLoginClick}>Login</MenuItem>
-            <MenuItem onClick={handleSignUpClick}>Sign Up</MenuItem> {/* Now opens sign-up modal */}
+            {user ? (
+              <>
+                <MenuItem onClick={handleNavigateToDashboard}>Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </>
+            ) : (
+              <>
+                <MenuItem onClick={handleLoginClick}>Login</MenuItem>
+                <MenuItem onClick={handleSignUpClick}>Sign Up</MenuItem>
+              </>
+            )}
           </Menu>
         </Box>
         <IconButton edge="end" sx={{ color: 'black', '&:hover': { color: '#F7444E' } }}>
